@@ -1,0 +1,38 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+fastapienv/
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test and tool cache
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+
+# Build output
+build/
+dist/
+*.egg-info/
+
+# Operating system
+.DS_Store
+Thumbs.db
