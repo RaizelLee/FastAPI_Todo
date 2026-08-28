@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from starlette import status
 from ..database import SessionLocal
@@ -30,7 +30,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token") # decode JWT token
 
 class CreateUserRequest(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     first_name: str
     last_name: str
     password: str
