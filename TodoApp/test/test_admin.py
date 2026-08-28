@@ -26,3 +26,30 @@ def test_admin_delete_todo_not_found(test_todo):
     response = client.delete("/admin/todo/99999")
     assert response.status_code == 404
     assert response.json() == {'detail': 'Todo not found.'}
+
+def override_get_current_normal_user():
+    return {
+        "username": "normal_user",
+        "id": 2,
+        "role": "user",
+    }
+
+def test_normal_user_cannot_access_admin_endpoint():
+    # 暫時把登入身分改成一般使用者
+    app.dependency_overrides[get_current_user] = (
+        override_get_current_normal_user
+    )
+
+    try:
+        response = client.get("/admin/todo")
+    finally:
+        # 測試結束後恢復原本的 admin override，
+        # 避免影響其他 test_admin 測試
+        app.dependency_overrides[get_current_user] = (
+            override_get_current_user
+        )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.json() == {
+        "detail": "Admin access required",
+    }

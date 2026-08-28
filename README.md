@@ -26,7 +26,7 @@ authentication and authorisation, ownership checks, schema migrations, automated
 | **Admin** | List all todos, delete any todo |
 | **Ops** | `/healthy` health-check endpoint for uptime monitoring |
 | **Data** | SQLAlchemy ORM + Alembic migrations |
-| **Testing** | 20 pytest cases covering auth, ownership, validation and error paths |
+| **Testing** | 21 pytest cases covering auth, ownership, validation and error paths |
 | **Deployment** | Auto-deployed to Render on every push to `main` |
 
 ---
@@ -106,8 +106,8 @@ Secrets are read from environment variables — nothing sensitive is committed.
 ## Design decisions
 
 - **Ownership enforced at the query level** — update and delete filter by `owner_id` rather than checking after fetching, so one user can never touch another user's data.
-- **Role check as a dependency** — admin routes reject non-admin tokens before any handler logic runs.
-- **Alembic over auto-create** — schema changes are versioned and reversible, the way they would be on a real team.
+- **Route-level role enforcement** — admin endpoints inspect the role from the verified JWT payload and reject non-admin users before performing database operations.
+- **Versioned schema migrations** — Alembic migration files are included for tracking schema changes. The current SQLite demo also creates missing tables on startup for simple deployment.
 - **Health-check endpoint** — lets the platform detect a broken deploy instead of serving errors silently.
 
 ---

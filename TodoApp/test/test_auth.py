@@ -62,3 +62,30 @@ async def test_get_current_user_missing_payload():
         await get_current_user(token)
     assert excinfo.value.status_code == status.HTTP_401_UNAUTHORIZED
     assert excinfo.value.detail == 'Could not validate user.'
+
+def test_user_cannot_register_as_admin():
+    request_body = {
+        "username": "malicious_user",
+        "email": "malicious@example.com",
+        "first_name": "Malicious",
+        "last_name": "User",
+        "password": "testpassword",
+        "phone_number": "0912345678",
+        "role": "admin",
+    }
+
+    response = client.post("/auth/", json=request_body)
+
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+
+    # 確認資料真的沒有寫進資料庫
+    db = TestingSessionLocal()
+    try:
+        user = (
+            db.query(User)
+            .filter(User.username == "malicious_user")
+            .first()
+        )
+        assert user is None
+    finally:
+        db.close()
