@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from sqlalchemy.orm import Session
 from starlette import status
 from ..database import SessionLocal
@@ -29,12 +29,12 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  # hash use
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token") # decode JWT token
 
 class CreateUserRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     username: str
     email: EmailStr
     first_name: str
     last_name: str
     password: str
-    role: str
     phone_number: str
 
 class Token(BaseModel):
@@ -85,7 +85,7 @@ async def create_user(db: db_dependency,
         email=create_user_request.email,
         first_name=create_user_request.first_name,
         last_name=create_user_request.last_name,
-        role=create_user_request.role,
+        role="user",
         hashed_password=bcrypt_context.hash(create_user_request.password),
         phone_number = create_user_request.phone_number,
         is_active=True,

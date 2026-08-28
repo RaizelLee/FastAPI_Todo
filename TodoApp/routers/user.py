@@ -27,21 +27,28 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-@router.get("/", status_code=status.HTTP_200_OK)
+from pydantic import BaseModel, ConfigDict, EmailStr
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    first_name: str
+    last_name: str
+    role: str
+    phone_number: str
+    is_active: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+@router.get("/", status_code=status.HTTP_200_OK, response_model=UserResponse)
 async def get_user(user:user_dependency, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     user_model = db.query(User).filter(User.id==user.get('id')).first()
     if user_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return {
-        user_model
-        # 'username': user_model.username,
-        # 'email': user_model.email,
-        # 'first_name': user_model.first_name,
-        # 'last_name': user_model.last_name,
-        # 'role': user_model.role
-    }
+    return user_model
 
 class PasswordRequest(BaseModel):
     old_password: str = Field(min_length=3)
