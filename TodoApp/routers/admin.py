@@ -31,7 +31,7 @@ async def read_all(user: user_dependency, db:db_dependency):
         raise HTTPException(status_code=401, detail="Authentication Failed")
     return db.query(Todos).all()
 
-@router.delete("/todos/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/todo/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(todo_id: int, user: user_dependency, db:db_dependency):
     if user is None or user.get('role')!='admin':
         raise HTTPException(status_code=401, detail="Authentication Failed")

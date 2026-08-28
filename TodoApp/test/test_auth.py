@@ -27,22 +27,36 @@ def test_create_access_token():
     role = 'user'
     expires_delta = timedelta(days=1)
 
-    token = create_access_token(username, user_id, role,expires_delta)
-    decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options={'verify_signature': False})
+    token = create_access_token(username, user_id, role, expires_delta)
+    decoded_token = jwt.decode(
+        token,
+        SECRET_KEY,
+        algorithms=[ALGORITHM],
+    )
     assert decoded_token['sub'] == username
     assert decoded_token['id'] == user_id
     assert decoded_token['role'] == role
 
 @pytest.mark.asyncio
-async def get_current_user_vaild_token():
-    encode = {'sub': 'testuser', 'id': 1, 'role': 'admin'}
+async def test_get_current_user_valid_token():
+    encode = {
+        "sub": "testuser",
+        "id": 1,
+        "role": "user",
+    }
     token = jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
     user = await get_current_user(token)
-    assert user == {'sub': 'testuser', 'id': 1, 'role': 'admin'}
+
+    assert user == {
+        "username": "testuser",
+        "id": 1,
+        "role": "user",
+    }
 
 @pytest.mark.asyncio
 async def test_get_current_user_missing_payload():
-    encode = {'role': 'user'}
+    encode = {'role': 'admin'}
     token = jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
     with pytest.raises(HTTPException) as excinfo:
         await get_current_user(token)

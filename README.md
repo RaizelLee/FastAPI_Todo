@@ -44,16 +44,16 @@ authentication and authorisation, ownership checks, schema migrations, automated
 | `GET` | `/healthy` | — | Health check |
 | `POST` | `/auth/` | — | Register a new user |
 | `POST` | `/auth/token` | — | Log in, returns JWT |
-| `GET` | `/todos/` | ✅ | List the current user's todos |
-| `POST` | `/todos/` | ✅ | Create a todo |
-| `GET` | `/todos/{id}` | ✅ | Get one todo (ownership enforced) |
-| `PUT` | `/todos/{id}` | ✅ | Update a todo (ownership enforced) |
-| `DELETE` | `/todos/{id}` | ✅ | Delete a todo (ownership enforced) |
+| `GET` | `/todo/` | ✅ | List the current user's todos |
+| `POST` | `/todo/` | ✅ | Create a todo |
+| `GET` | `/todo/{id}` | ✅ | Get one todo (ownership enforced) |
+| `PUT` | `/todo/{id}` | ✅ | Update a todo (ownership enforced) |
+| `DELETE` | `/todo/{id}` | ✅ | Delete a todo (ownership enforced) |
 | `GET` | `/user/` | ✅ | Get current user profile |
 | `PUT` | `/user/` | ✅ | Change password |
 | `PUT` | `/user/phone_number` | ✅ | Update phone number |
-| `GET` | `/admin/todos` | 🔑 admin | List all todos |
-| `DELETE` | `/admin/todos/{id}` | 🔑 admin | Delete any todo |
+| `GET` | `/admin/todo` | 🔑 admin | List all todos |
+| `DELETE` | `/admin/todo/{id}` | 🔑 admin | Delete any todo |
 
 Full interactive docs: [`/docs`](https://fastapi-todo-was8.onrender.com/docs)
 

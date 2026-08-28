@@ -14,7 +14,7 @@ def test_admin_read_all_authenticated(test_todo):
     assert response.json() == [{'priority': 2, 'id': 1, 'owner_id': 1, 'title': 'Test', 'description': 'Test', 'complete': False}]
 
 def test_admin_delete_todo(test_todo):
-    response = client.delete("/admin/todos/1")
+    response = client.delete("/admin/todo/1")
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     db = TestingSessionLocal()
@@ -23,6 +23,6 @@ def test_admin_delete_todo(test_todo):
 
 
 def test_admin_delete_todo_not_found(test_todo):
-    response = client.delete("/admin/todos/99999")
+    response = client.delete("/admin/todo/99999")
     assert response.status_code == 404
     assert response.json() == {'detail': 'Todo not found.'}
